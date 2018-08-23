@@ -73,7 +73,7 @@ class courseController extends controller {
             let params = {
                 MerchantID : 'f83cc956-f59f-11e6-889a-005056a205be',
                 Amount : course.price,
-                CallbackURL : 'http://localhost:3000/courses/payment/checker',
+                CallbackURL : 'http://localhost:3001/courses/payment/checker',
                 Description : `بابت خرید دوره ${course.title}`,
                 Email : req.user.email
             };
