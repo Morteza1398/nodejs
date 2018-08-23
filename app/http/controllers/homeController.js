@@ -6,7 +6,6 @@ const i18n = require("i18n");
 class homeController extends controller {
     
     async index(req , res) {
-        return res.json(i18n.__('title'))
         let courses = await Course.find({ lang : req.getLocale()}).sort({ createdAt : 1}).limit(8).exec();
         res.render('home/index' , { courses });
     }
