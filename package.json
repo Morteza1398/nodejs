@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-module-path": "^2.2.0",
+    "auto-bind": "^1.2.0",
     "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.1",
@@ -22,7 +24,6 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3",
-    "server.js": "^1.0.0"
+    "nodemon": "^1.17.3"
   }
 }

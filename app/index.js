@@ -16,6 +16,7 @@ module.exports = class Application {
         this.setupExpress();
         this.setMongoConnection();
         this.setConfig();
+        this.setRouters();
     }
 
     setupExpress() {
@@ -47,10 +48,10 @@ module.exports = class Application {
         }));
         app.use(cookieParser('mysecretkey'));
         app.use(flash());
-    
-        app.get('/' , (req , res) => {
-            res.json('Hell Roocket');
-        })
+    }
 
+    setRouters() {
+        app.use(require('app/routes/api'));
+        app.use(require('app/routes/web'));        
     }
 }
