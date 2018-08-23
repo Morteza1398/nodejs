@@ -1,17 +1,20 @@
 const controller = require('app/http/controllers/controller');
+const passport = require('passport');
 
 class registerController extends controller {
-    
+
     showRegsitrationForm(req , res) {
-        res.render('auth/register' , { messages : req.flash('errors') });
+        res.render('auth/register' , { messages : req.flash('errors') , recaptcha : this.recaptcha.render() });
     }
 
     registerProccess(req ,res , next) {
-        this.validationData(req)
+        this.recaptchaValidation(req , res)
+            .then(result => this.validationData(req))
             .then(result => {
-                if(result) res.json('register proccess')
+                if(result) this.register(req , res , next)
                 else res.redirect('/register');
-            });
+            })
+            .catch(err => console.log(er));
     }
 
 
@@ -36,6 +39,14 @@ class registerController extends controller {
                 return false;
             })
             .catch(err => console.log(err));
+    }
+
+    register(req , res , next) {
+        passport.authenticate('local.register' , { 
+            successRedirect : '/',
+            failureRedirect : '/register',
+            failureFlash : true
+        })(req, res , next);
     }
 
 }
