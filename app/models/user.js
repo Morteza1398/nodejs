@@ -11,6 +11,7 @@ const userSchema = Schema({
     password : { type : String ,  required : true },
     rememberToken : { type : String , default : null },
     learning : [{ type : Schema.Types.ObjectId , ref : 'Course'}],
+    roles : [{ type : Schema.Types.ObjectId , ref : 'Role'}],
 } , { timestamps : true , toJSON : { virtuals : true } });
 
 userSchema.plugin(mongoosePaginate);
@@ -34,6 +35,16 @@ userSchema.pre('findOneAndUpdate' , function(next) {
 userSchema.methods.comparePassword = function(password) {
     return bcrypt.compareSync(password , this.password);
 }
+
+
+userSchema.methods.hasRole = function(roles) { 
+    let result = roles.filter(role => {
+        return this.roles.indexOf(role) > -1;
+    })
+
+    return !! result.length;
+}
+
 
 userSchema.methods.setRememberToken = function(res) {
     const token = uniqueString();
