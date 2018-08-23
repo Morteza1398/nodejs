@@ -1,5 +1,6 @@
 const autoBind = require('auto-bind');
 const Recaptcha = require('express-recaptcha').Recaptcha;
+const { validationResult } = require('express-validator/check');
 
 module.exports = class controller {
     constructor() {
@@ -9,9 +10,9 @@ module.exports = class controller {
 
     recaptchaConfig() {
         this.recaptcha = new Recaptcha(
-            '6LcsaVcUAAAAAL7Onj_lTp7wYZyMpzK3ZXQ3xrDg',
-            '6LcsaVcUAAAAAH__aEv9-X6agk1zQgCJ8v9PPr0K' , 
-            { hl : 'fa' }
+            config.service.recaptcha.clinet_key,
+            config.service.recaptcha.secret_key , 
+            {...config.service.recaptcha.options}
         );
     }
 
@@ -24,5 +25,21 @@ module.exports = class controller {
                 } else resolve(true);
             })
         })
+    }
+
+    async validationData(req) {
+        const result = validationResult(req);
+        if (! result.isEmpty()) {
+            const errors = result.array();
+            const messages = [];
+           
+            errors.forEach(err => messages.push(err.msg));
+
+            req.flash('errors' , messages)
+
+            return false;
+        }
+
+        return true;
     }
 }
