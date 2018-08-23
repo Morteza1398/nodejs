@@ -16,6 +16,7 @@ const rememberLogin = require('app/http/middleware/rememberLogin');
 const helmet = require('helmet');
 const csrf = require('csurf');
 const csrfErrorHandler = require('app/http/middleware/csrfErrorHandler');
+const activeUser = require('app/http/middleware/activeUser');
 const RateLimit = require('express-rate-limit');
 const apiLimiter = new RateLimit({
     windowMs : 1000 * 60 * 5,
@@ -93,8 +94,10 @@ module.exports = class Application {
     }
 
     setRouters() {
-        app.use(apiLimiter ,require('app/routes/api'));
+        app.use(activeUser.handle);
         app.use(csrf({ cookie : true }),require('app/routes/web'));
         app.use(csrfErrorHandler.handle);
+        app.use(apiLimiter , require('app/routes/api'));
+
     }
 }
