@@ -8,10 +8,10 @@ class courseController extends controller {
     uploadImage(req, res) {
         let image = req.file;
         res.json({
-            "uploaded" : 1,
-            "fileName" : image.originalname,
-            "url" : `${image.destination}/${image.filename}`.substring(8)
+
         });
+
+
     }
 
 }
