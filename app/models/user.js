@@ -71,3 +71,4 @@ userSchema.methods.checkLearning = function(courseId) {
 }
 
 module.exports = mongoose.model('User' , userSchema);
+
