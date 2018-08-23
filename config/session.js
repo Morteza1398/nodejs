@@ -1,8 +1,10 @@
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
+	
 
 module.exports = {
+    name : 'session_roocket',
     secret : process.env.SESSION_SECRETKEY,
     resave : true,
     saveUninitialized : true,
