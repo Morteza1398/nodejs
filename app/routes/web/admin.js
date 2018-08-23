@@ -5,6 +5,7 @@ const router = express.Router();
 const adminController = require('app/http/controllers/admin/adminController');
 const courseController = require('app/http/controllers/admin/courseController');
 const episodeController = require('app/http/controllers/admin/episodeController');
+const commentController = require('app/http/controllers/admin/commentController');
 
 // validators 
 const courseValidator = require('app/http/validators/courseValidator');
@@ -50,5 +51,10 @@ router.get('/episodes/:id/edit' , episodeController.edit);
 router.put('/episodes/:id' , episodeValidator.handle() , episodeController.update );
 router.delete('/episodes/:id' , episodeController.destroy);
 
+
+router.get('/comments/approved' , commentController.approved);
+router.get('/comments' , commentController.index);
+router.put('/comments/:id/approved' , commentController.update );
+router.delete('/comments/:id' , commentController.destroy);
 
 module.exports = router;

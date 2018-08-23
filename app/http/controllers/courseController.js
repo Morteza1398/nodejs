@@ -12,7 +12,7 @@ class courseController extends controller {
     }
 
     async single(req , res) {
-        let course = await Course.findOne({ slug : req.params.course })
+        let course = await Course.findOneAndUpdate({ slug : req.params.course } , { $inc : { viewCount : 1}})
                                 .populate([
                                     {
                                         path : 'user',
@@ -20,11 +20,33 @@ class courseController extends controller {
                                     } ,
                                     {
                                         path : 'episodes',
-                                        options : {
-                                            sort : { number : 1}
-                                        }
+                                        options : { sort : { number : 1} }
+                                    }
+                                ])
+                                .populate([
+                                    {
+                                        path : 'comments',
+                                        match : {
+                                            parent : null,
+                                            approved : true
+                                        },
+                                        populate : [
+                                            {
+                                                path : 'user',
+                                                select : 'name'
+                                            },
+                                            {
+                                                path : 'comments',
+                                                match : {
+                                                    approved : true
+                                                },
+                                                populate : { path : 'user' , select : 'name'}
+                                            }   
+                                        ]
                                     }
                                 ]);
+        
+        
         let canUserUse = await this.canUse(req , course);
 
         res.render('home/single-course' , { course , canUserUse});
@@ -41,6 +63,8 @@ class courseController extends controller {
 
             let filePath = path.resolve(`./public/download/ASGLKET!1241tgsdq415215/${episode.videoUrl}`);
             if(! fs.existsSync(filePath)) this.error('چنین فایل برای دانلود وجود دارد',404);
+
+            await episode.inc('downloadCount');
 
             return res.download(filePath)
            
