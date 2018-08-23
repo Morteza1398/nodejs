@@ -1,14 +1,21 @@
+const path = require('path');
+const autoBind = require('auto-bind');
+
 module.exports = class Helpers {
     
     constructor(req , res) {
+        autoBind(this);
         this.req = req;
         this.res = res;
+        this.formData = req.flash('formData')[0];
     }
 
-
-    getObjects() {
+    getObjects() {        
         return {
-            auth : this.auth()
+            auth : this.auth(),
+            viewPath : this.viewPath,
+            ...this.getGlobalVaribales(),
+            old : this.old
         }
     }
 
@@ -19,4 +26,17 @@ module.exports = class Helpers {
         }
     }
 
+    viewPath(dir) {
+        return path.resolve(config.layout.view_dir + '/' + dir);
+    }
+
+    getGlobalVaribales() {
+        return {
+            errors : this.req.flash('errors')
+        }
+    }
+
+    old(field , defaultValue = '') {
+        return this.formData && this.formData.hasOwnProperty(field) ? this.formData[field] : defaultValue;
+    }
 }

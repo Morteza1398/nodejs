@@ -10,7 +10,7 @@ module.exports = class controller {
 
     recaptchaConfig() {
         this.recaptcha = new Recaptcha(
-            config.service.recaptcha.clinet_key,
+            config.service.recaptcha.client_key,
             config.service.recaptcha.secret_key , 
             {...config.service.recaptcha.options}
         );
@@ -21,7 +21,7 @@ module.exports = class controller {
             this.recaptcha.verify(req , (err , data) => {
                 if(err) {
                     req.flash('errors' , 'گزینه امنیتی مربوط به شناسایی روبات خاموش است، لطفا از فعال بودن آن اطمینان حاصل نمایید و مجدد امتحان کنید');
-                    res.redirect(req.url);
+                    this.back(req,res)
                 } else resolve(true);
             })
         })
@@ -41,5 +41,10 @@ module.exports = class controller {
         }
 
         return true;
+    }
+
+    back(req , res) {
+        req.flash('formData' , req.body);
+        return res.redirect(req.header('Referer') || '/');
     }
 }
